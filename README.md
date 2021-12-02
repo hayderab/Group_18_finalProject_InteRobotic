@@ -5,7 +5,7 @@ Intelligent Robotic Group 18 Final Project
 1. Copy and place the "_maze_robot_package_" folder at: _'/home/'$USER'/catkin_ws/src'_
 2. Re-built your catkin, in a new terminal type: " _cd ~/catkin_ws_ " and then " _catkin_make_ "
 3. Copy and paste the "_maze_robot_package.sh_" file at (your home folder): _'/home/'$USER'/'_
-4. Be sure that the script (.sh file) is executable: " _chmod + u+x maze_robot_package.sh_ "
+4. Be sure that the script (.sh file) is executable: " _chmod u+x maze_robot_package.sh_ "
 5. In a new terminal, run: " _./maze_robot_package.sh_ "
 6. In a new terminal, you can run a file for testing: " _rosrun maze_robot_package subscriber_node.py_ "
 
