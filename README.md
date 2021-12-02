@@ -2,14 +2,11 @@
 Intelligent Robotic Group 18 Final Project
 
 ## How to run
-1. Copy and place the "maze_robot_package" folder at: '/home/'$USER'/catkin_ws/src'
-2. Re-built your catkin.
-   In a new terminal:
-	A. " cd ~/catkin_ws "
-	B. " catkin_make "
-3. Be sure that the script is executable: " chmod + x '/home/'$USER'/catkin_ws/src/maze_robot_package/src/hello.py' "
-4. In a new terminal run: " roscore "
-5. In a new terminal run: " rosrun maze_robot_package hello.py "
+1. Copy and place the "_maze_robot_package_" folder at: _'/home/'$USER'/catkin_ws/src'_
+2. Re-built your catkin, in a new terminal type: " _cd ~/catkin_ws_ " and then " _catkin_make_ "
+3. Be sure that the script is executable: " _chmod + x '/home/'$USER'/catkin_ws/src/maze_robot_package/src/hello.py'_ "
+4. In a new terminal run: " _roscore_ "
+5. In a new terminal run: " _rosrun maze_robot_package hello.py_ "
 
 After the above steps, you should see the "Hello world" message on your terminal
 
