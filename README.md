@@ -9,7 +9,9 @@ Intelligent Robotic Group 18 Final Project
 5. In a new terminal, run: " _./maze_robot_package.sh_ "
 6. In a new terminal, you can run a file for testing: " _rosrun maze_robot_package subscriber_node.py_ "
 
-After the above steps, Stage ROS should be executed (due to step 5) and you should see the maze's occupancy grid data on your latest terminal window (due to step 6).
+After the above steps, Stage ROS should be executed (due to step 5) and you should see a .txt file on your desktop with the coordinates, cell value and rewards of each grid cell (due to step 6).
+
+Note: for the cells in the centre of the maze (8 <= x <= 10 and 9 <= y <= 11), I setup as reward = 10
 
 ## Extra
 If you want to see how to run the "publisher_node.py" file, please visit the following link: 
