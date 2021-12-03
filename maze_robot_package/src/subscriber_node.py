@@ -7,9 +7,8 @@ from nav_msgs.msg import OccupancyGrid, Odometry
 def callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)  # print grids occupancy
 
-    # convertGridCoordinates
-    # printRobotCoordinates(data)
-
+    # convertToGridCoordinates(data)
+    # printCurrentRobotCoordinates(data)  # do not forget to uncomment the subscriber on listener()
 
 
 def listener():
@@ -22,7 +21,7 @@ def listener():
     rospy.spin()
 
 
-def convertGridCoordinates(data):
+def convertToGridCoordinates(data):
     width = 0
     while width < data.info.width:
         height = 0
@@ -35,7 +34,7 @@ def convertGridCoordinates(data):
         width += 1
 
 
-def printRobotCoordinates(data):
+def printCurrentRobotCoordinates(data):
     print("x:")
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.pose.pose.position.x)  # print robot x position
 
