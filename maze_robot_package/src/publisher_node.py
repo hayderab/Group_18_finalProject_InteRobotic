@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 from maze_robot_package import util
 from std_msgs.msg import String
