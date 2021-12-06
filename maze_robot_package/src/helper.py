@@ -13,8 +13,8 @@ def save_to_text_file(givenDict, filename):
         textfile = open(os.path.join(desktop_dir, filename), "w+")
         for coordinates, values in givenDict.items():
             textfile.write(
-                "(x_index, y_index)" + "[" + "x, " + "y, " + "cell value, " + "reward value" + "]" + "\n")
-            textfile.write(str(coordinates) + str(values) + "\n")
+                "(x_index, y_index)" + " : " + "[" + "x-coord, " + "y-coord, " + "reward, " + "policy direction" + "]" + "\n")
+            textfile.write(str(coordinates) + " : " + str(values) + "\n")
             textfile.write(" " + "\n")
         textfile.close()
         print("Done")
@@ -26,14 +26,14 @@ def save_to_text_file(givenDict, filename):
 # Returns a dictionary with coordinates, grade_cell value and reward
 def create_dict_grid(dict_grid, width_index, height_index, x, y, grid_cell):
     if grid_cell > 0:  # for obstacles
-        dict_grid[width_index, height_index] = [x, y, grid_cell, -1]  # reward = -1
+        dict_grid[width_index, height_index] = [x, y, -1, (-1, -1)]  # reward = -1
     elif grid_cell == -1:  # for unknown cells
-        dict_grid[width_index, height_index] = [x, y, grid_cell, 0]  # reward = 0
+        dict_grid[width_index, height_index] = [x, y, -1, (-1, -1)]  # reward = -1 (safer because it can be a wall too)
     else:  # for known cells
         if (8 <= x <= 10) and (9 <= y <= 11):  # for the target goal cell (I chose for now the centre of the maze)
-            dict_grid[width_index, height_index] = [x, y, grid_cell, 10]  # reward = 10
+            dict_grid[width_index, height_index] = [x, y, 10, (-1, -1)]  # reward = 10
         else:
-            dict_grid[width_index, height_index] = [x, y, grid_cell, 0]  # reward = 0
+            dict_grid[width_index, height_index] = [x, y, 0, (-1, -1)]  # reward = 0
     return dict_grid
 
 
