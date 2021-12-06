@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
+import global_file
 import rospy
 from geometry_msgs.msg import Twist
 
 
-def talker():
+def mover():
     pub = rospy.Publisher('cmd_vel', Twist, queue_size=100)
-    rospy.init_node('Mover', anonymous=True)
+    # rospy.init_node('Mover', anonymous=True)
     # rate = rospy.Rate(10) # 10hz
 
     while not rospy.is_shutdown():
@@ -17,8 +18,8 @@ def talker():
     # rate.sleep()
 
 
-if __name__ == '__main__':
-    try:
-        talker()
-    except rospy.ROSInterruptException:
-        pass
+def talker():
+    # rospy.init_node('Mover', anonymous=True)
+
+    # POLICY ITERATION can be written here
+    print(global_file.dict_glob_grid)

@@ -3,7 +3,7 @@
 import os
 
 
-# This created because terminal could not print all the results properly
+# This created because terminal could not print the dictionary properly
 # The file will be created/saved on your desktop
 def save_to_text_file(givenDict, filename):
     home_dir = os.path.expanduser('~')
@@ -23,7 +23,7 @@ def save_to_text_file(givenDict, filename):
         print(e)
 
 
-# Returns a dictionary with coordinates, grade_cell value and reward
+# Returns a dictionary with coordinates, reward and policy direction with default (-1, -1)
 def create_dict_grid(dict_grid, width_index, height_index, x, y, grid_cell):
     if grid_cell > 0:  # for obstacles
         dict_grid[width_index, height_index] = [x, y, -1, (-1, -1)]  # reward = -1
