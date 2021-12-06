@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
+
 import rospy
-from maze_robot_package import util
-from std_msgs.msg import String
+from geometry_msgs.msg import Twist
 
-# Initialize the node with rospy
-rospy.init_node('publisher_node')
 
-# Create publisher
-publisher = rospy.Publisher("~topic",String,queue_size=1)
+def talker():
+    pub = rospy.Publisher('cmd_vel', Twist, queue_size=100)
+    rospy.init_node('Mover', anonymous=True)
+    # rate = rospy.Rate(10) # 10hz
 
-# Define Timer callback
-def callback(event):
-	msg = String()
-	msg.data = "%s is %s!" %(util.getName(),util.getStatus())
-	publisher.publish(msg)
+    while not rospy.is_shutdown():
+        base_data = Twist()
+        base_data.linear.x = 1  # For now just run the robot to the right
 
-# Read parameter
-pub_period = rospy.get_param("~pub_period",1.0)
+        pub.publish(base_data)
+    # rate.sleep()
 
-# Create timer
-rospy.Timer(rospy.Duration.from_sec(pub_period),callback)
 
-# spin to keep the script for exiting
-rospy.spin()
+if __name__ == '__main__':
+    try:
+        talker()
+    except rospy.ROSInterruptException:
+        pass

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 
 
@@ -42,8 +44,9 @@ def cell_coordinates_reward(data):
     while width_index < data.info.width:
         height_index = 0
         while height_index < data.info.height:
+            # Reference: https://answers.ros.org/question/201172/get-xy-coordinates-of-an-obstacle-from-a-map/?answer=262245#post-id-262245
             grid_cell = data.data[height_index * data.info.width + width_index]
-            # if grid_cell > 0:  # only for the obstacles
+            # if grid_cell > 0:  # >0 is only for the obstacles
             x = width_index * data.info.resolution + data.info.resolution / 2  # coordinate x of the current gird cell
             y = height_index * data.info.resolution + data.info.resolution / 2  # coordinate y of the current grid cell
             dict_grid = create_dict_grid(dict_grid, width_index, height_index, x, y, grid_cell)
