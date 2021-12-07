@@ -5,7 +5,7 @@ from nav_msgs.msg import OccupancyGrid, Odometry
 import helper
 
 
-class Subscriber:
+class SubscriberNode:
 
     def __init__(self):
         self._dict_gird = {}
@@ -14,7 +14,7 @@ class Subscriber:
     def get_dictGrid(self):
         return self._dict_gird
 
-    # DO NOT FORGET to uncomment its Subscriber from the listener() method
+    # DO NOT FORGET to uncomment its SubscriberNode from the listener() method
     @staticmethod
     def callback_coordinates(data):
         print("x:")
@@ -31,4 +31,4 @@ class Subscriber:
 
     def listener(self):
         rospy.Subscriber("/map", OccupancyGrid, self.callback_map)  # take data from the OccupancyGrid
-        # rospy.Subscriber("/odom", Odometry, callback_coordinates)  # take data from the Odometry
+        # rospy.SubscriberNode("/odom", Odometry, callback_coordinates)  # take data from the Odometry

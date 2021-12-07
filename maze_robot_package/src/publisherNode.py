@@ -4,7 +4,7 @@ import rospy
 from geometry_msgs.msg import Twist
 
 
-class Publisher:
+class PublisherNode:
     @staticmethod
     def mover():
         pub = rospy.Publisher('cmd_vel', Twist, queue_size=100)
