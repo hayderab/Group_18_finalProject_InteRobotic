@@ -52,6 +52,6 @@ def cell_coordinates_reward(data):
             dict_grid = create_dict_grid(dict_grid, width_index, height_index, x, y, grid_cell)
             height_index += 1
         width_index += 1
-    save_to_text_file(dict_grid, 'results.txt')
+    # save_to_text_file(dict_grid, 'results.txt')
 
-    return dict_grid
+    return dict_grid, data.info.width, data.info.height

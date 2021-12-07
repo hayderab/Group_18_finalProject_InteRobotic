@@ -2,6 +2,7 @@
 
 import rospy
 from geometry_msgs.msg import Twist
+import policy_iteration
 
 
 class PublisherNode:
@@ -21,4 +22,4 @@ class PublisherNode:
     def talker(subscriber_object):
 
         # POLICY ITERATION can be written here
-        print(subscriber_object.get_dictGrid())
+        print(policy_iteration.policy_generate(subscriber_object.get_dictGrid(), subscriber_object.get_width_length(), subscriber_object.get_height_length()))
