@@ -13,7 +13,7 @@ def save_to_text_file(givenDict, filename):
         textfile = open(os.path.join(desktop_dir, filename), "w+")
         for coordinates, values in givenDict.items():
             textfile.write(
-                "(x_index, y_index)" + " : " + "[" + "x-coord, " + "y-coord, " + "reward, " + "policy direction, " + "fixed reward value?" + "]" + "\n")
+                "(x_index, y_index)" + " : " + "[" + "x-coord, " + "y-coord, " + "reward, " + "value state, " + "policy direction, " + "terminal state?" + "]" + "\n")
             textfile.write(str(coordinates) + " : " + str(values) + "\n")
             textfile.write(" " + "\n")
         textfile.close()
@@ -23,17 +23,18 @@ def save_to_text_file(givenDict, filename):
         print(e)
 
 
-# Returns a dictionary with coordinates, reward, policy direction with default (-1, -1) and "is the reward's value fixed?"
+# Returns a dictionary with:
+# coordinates, reward, value state (default to 0), policy direction with default (-1, -1) and "terminal state?"
 def create_dict_grid(dict_grid, width_index, height_index, x, y, grid_cell):
     if grid_cell > 0:  # for obstacles
-        dict_grid[width_index, height_index] = [x, y, -1, (-1, -1), True]  # reward = -1
+        dict_grid[width_index, height_index] = [x, y, -1, 0, (-1, -1), True]  # reward = -1
     elif grid_cell == -1:  # for unknown cells
-        dict_grid[width_index, height_index] = [x, y, -1, (-1, -1), True]  # reward = -1 (safer because it can be a wall too)
+        dict_grid[width_index, height_index] = [x, y, -1, 0, (-1, -1), True]  # reward = -1 (safer because it can be a wall too)
     else:  # for known cells
         if (8 <= x <= 10) and (9 <= y <= 11):  # for the target goal cell (I chose for now the centre of the maze)
-            dict_grid[width_index, height_index] = [x, y, 10, (-1, -1), True]  # reward = 10
+            dict_grid[width_index, height_index] = [x, y, 10, 0, (-1, -1), True]  # reward = 10
         else:
-            dict_grid[width_index, height_index] = [x, y, 0, (-1, -1), False]  # reward = 0
+            dict_grid[width_index, height_index] = [x, y, 0, 0, (-1, -1), False]  # reward = 0
     return dict_grid
 
 
