@@ -53,6 +53,6 @@ def maze_dict_grid(data):
             maze_dict = create_dict_grid(maze_dict, width_index, height_index, x, y, grid_cell)
             height_index += 1
         width_index += 1
-    save_to_text_file(maze_dict, 'results.txt')
+    # save_to_text_file(maze_dict, 'results.txt')
 
     return maze_dict, data.info.width, data.info.height
