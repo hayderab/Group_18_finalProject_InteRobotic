@@ -5,7 +5,7 @@ def policy_generate(dicts_grid, width_length, height_length, gamma, trans):
     # Loop through all coords
     for y in range(0, height_length):
         for x in range(0, width_length):
-            
+
             # Reset at the start of each loop
             Qvalue = 0
             # Direction the policy is pointing for given coord
@@ -29,27 +29,25 @@ def policy_generate(dicts_grid, width_length, height_length, gamma, trans):
                 # Calculate Qvalue for each surround square
                 if not ((x + 1) >= width_length):
                     print(dicts_grid[(x + 1, y)][3])
-                    a = gamma*dicts_grid[(x + 1, y)][3]
+                    a = gamma * dicts_grid[(x + 1, y)][3]
                     b = dicts_grid[(x + 1, y)][2] + a
                     left = trans * b
                 if not ((y - 1) < 0):
                     print(dicts_grid[(x, y - 1)][3])
-                    a = gamma*dicts_grid[(x, y - 1)][3]
+                    a = gamma * dicts_grid[(x, y - 1)][3]
                     b = dicts_grid[(x, y - 1)][2] + a
                     down = trans * b
 
                 if not ((x - 1) < 0):
-
                     print(list(dicts_grid[(x - 1, y)])[3])
-                    print(dicts_grid[(0,0)])
-                    a = gamma*dicts_grid[(x - 1, y)][3]
+                    print(dicts_grid[(0, 0)])
+                    a = gamma * dicts_grid[(x - 1, y)][3]
                     b = dicts_grid[(x - 1, y)][2] + a
                     right = trans * b
                 if not ((y + 1) >= height_length):
-                    a = gamma*dicts_grid[(x, y + 1)][3]
+                    a = gamma * dicts_grid[(x, y + 1)][3]
                     b = dicts_grid[(x, y + 1)][2] + a
                     up = trans * b
-
 
                 if not ((x + 1) >= width_length) and (left > Qvalue):
                     Qvalue = left
@@ -94,6 +92,7 @@ def policy_generate(dicts_grid, width_length, height_length, gamma, trans):
 
     return new_dicts_grid
 
+
 def reward_propagation(dicts_grid, width_length, height_length):
     # Stores the dictionary with new rewards
     new_dicts_grid = {}
@@ -103,10 +102,10 @@ def reward_propagation(dicts_grid, width_length, height_length):
         for x in range(0, width_length):
 
             if dicts_grid[(x, y)][4]:
-                new_dicts_grid[(x,y)] = dicts_grid[(x,y)]
+                new_dicts_grid[(x, y)] = dicts_grid[(x, y)]
 
             else:
-                value = dicts_grid[(x,y)]
+                value = dicts_grid[(x, y)]
                 current_reward = value[2]
                 p_coords = value[3]
                 p_reward = dicts_grid[p_coords][2]

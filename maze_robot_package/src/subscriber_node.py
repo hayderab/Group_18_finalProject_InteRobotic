@@ -2,7 +2,7 @@
 
 import rospy
 from nav_msgs.msg import OccupancyGrid, Odometry
-import helper
+import maze_dictionary
 
 
 class SubscriberNode:
@@ -35,7 +35,7 @@ class SubscriberNode:
         # rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)  # print grids occupancy
 
         # Returns/Saves a dictionary of the coordinates (x, y) and reward of every cell
-        self._dict_gird, self._width_length, self._height_length = helper.cell_coordinates_reward(data)
+        self._dict_gird, self._width_length, self._height_length = maze_dictionary.maze_dict_grid(data)
 
     def listener(self):
         rospy.Subscriber("/map", OccupancyGrid, self.callback_map)  # take data from the OccupancyGrid

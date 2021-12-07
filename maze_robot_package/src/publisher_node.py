@@ -19,7 +19,7 @@ class PublisherNode:
         # rate.sleep()
 
     @staticmethod
-    def talker(subscriber_object):
+    def talker(sub_obj):
 
         # POLICY ITERATION can be written here
-        print(policy_iteration.policy_generate(subscriber_object.get_dictGrid(), subscriber_object.get_width_length(), subscriber_object.get_height_length()))
+        print(policy_iteration.policy_generate(sub_obj.get_dictGrid(), sub_obj.get_width_length(), sub_obj.get_height_length(), 0.9, 1.0))
