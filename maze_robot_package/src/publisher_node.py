@@ -9,11 +9,11 @@ class PublisherNode:
     @staticmethod
     def mover(sub):
         pub = rospy.Publisher('cmd_vel', Twist, queue_size=100)
-        rate = rospy.Rate(10)  # 10hz
+        rate = rospy.Rate(10)  # 10hz - do not send /cmd_vel commands too quickly
 
         while not rospy.is_shutdown():
             move = Twist()
-            # keep the 2 digits of the floats (same as we did with the dictionary)
+            # keep just the 2 digits of the floats (same as we did with the dictionary)
             current_x = float("{0:.1f}".format(sub.get_current_position_x()))
             current_y = float("{0:.1f}".format(sub.get_current_position_y()))
             # put current x,y in a tuple to compare with the dictionary's tuple
@@ -24,14 +24,16 @@ class PublisherNode:
                 if current_position_tuple == coordinates:  # compare the two tuples
                     if direction == "right":
                         move.linear.x = 1.0  # Turn right
+                        print(current_position_tuple, coordinates, direction)
                     elif direction == "left":
                         move.linear.x = -1.0  # Turn left
+                        print(current_position_tuple, coordinates, direction)
                     elif direction == "up":  # Go up
                         pass
                     else:  # Go down
                         pass
             pub.publish(move)
-        rate.sleep()
+            rate.sleep()
 
     @staticmethod
     def talker(sub_obj):

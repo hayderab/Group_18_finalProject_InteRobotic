@@ -7,13 +7,14 @@ import os
 # This is for testing the movement of t robot based given policy
 # Can be deleted later
 def create_dummy_policy_dict(dummy_dict, x, y):
+    # keep just the 2 digits of the floats (for easier comparison)
     x = float("{0:.1f}".format(x))
     y = float("{0:.1f}".format(y))
     # Set the following range of points (x,y) to go "right" or "up" etc.
     if (0.0 <= x <= 6.0) and (0.0 <= y <= 2.0):
-        dummy_dict[x, y] = "right"  # keep the 2 digits of the floats
+        dummy_dict[x, y] = "right"
     if (x == 6.0) and (0.0 <= y <= 2.0):
-        dummy_dict[x, y] = "up"  # keep the 2 digits of the floats
+        dummy_dict[x, y] = "up"
     return dummy_dict
 
 

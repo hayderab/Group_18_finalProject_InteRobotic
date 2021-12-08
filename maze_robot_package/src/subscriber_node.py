@@ -37,10 +37,10 @@ class SubscriberNode:
 
     # DO NOT FORGET to uncomment its rospy.Subscriber for /odom from the listener() method
     def callback_coordinates(self, data):
-        # print("x:")
+        # print("x:", data.pose.pose.position.x)
         # rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.pose.pose.position.x)  # print robot x position
 
-        # print("y:")
+        # print("y:", data.pose.pose.position.y)
         # rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.pose.pose.position.y)  # print robot y position
 
         self._current_position_x = data.pose.pose.position.x
