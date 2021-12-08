@@ -13,7 +13,8 @@ if __name__ == '__main__':
 
         sub.listener()  # run what is inside the SubscriberNode class: 1.get the grid data & 2.generate a grid dictionary
         rospy.sleep(1)  # sleep for 1 second (subscriber behavior - need sometime to retrieve the data)
-        pub.talker(sub)  # transfer the current Subscriber object to the Publisher (to use its grid_dictionary there)
+        # pub.talker(sub)  # transfer the current Subscriber object to the Publisher (to use its grid_dictionary there)
+        pub.mover(sub)  # moves the robot based on the given instructions (dictionary)
 
         rospy.spin()  # spin() simply keeps python from exiting until this node is stopped
 
