@@ -2,6 +2,7 @@
 
 import rospy
 from geometry_msgs.msg import Twist
+from math import pi
 import policy_iteration
 
 
@@ -24,15 +25,23 @@ class PublisherNode:
                 if current_position_tuple == coordinates:  # compare the two tuples
                     if direction == "right":
                         move.linear.x = 1.0  # Turn right
+                        pub.publish(move)  # move the robot (publish the move)
                         print(current_position_tuple, coordinates, direction)
                     elif direction == "left":
                         move.linear.x = -1.0  # Turn left
+                        pub.publish(move)
                         print(current_position_tuple, coordinates, direction)
                     elif direction == "up":  # Go up
-                        pass
+                        # ref: https://get-help.robotigniteacademy.com/t/rotating-90-degrees/494
+
+                        move.angular.z = 1
+                        pub.publish(move)
+
+                        move.angular.z = 0  # stop rotating
+                        print(current_position_tuple, coordinates, direction)
                     else:  # Go down
                         pass
-            pub.publish(move)
+
             rate.sleep()
 
     @staticmethod

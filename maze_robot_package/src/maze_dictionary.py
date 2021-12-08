@@ -11,9 +11,9 @@ def create_dummy_policy_dict(dummy_dict, x, y):
     x = float("{0:.1f}".format(x))
     y = float("{0:.1f}".format(y))
     # Set the following range of points (x,y) to go "right" or "up" etc.
-    if (0.0 <= x <= 6.0) and (0.0 <= y <= 2.0):
+    if (0.0 <= x < 6.0) and (0.0 <= y <= 2.0):
         dummy_dict[x, y] = "right"
-    if (x == 6.0) and (0.0 <= y <= 2.0):
+    if (x == 5.9) and (0.0 <= y <= 2.0):
         dummy_dict[x, y] = "up"
     return dummy_dict
 
