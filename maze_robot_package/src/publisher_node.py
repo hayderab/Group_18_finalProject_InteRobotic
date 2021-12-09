@@ -41,6 +41,7 @@ class PublisherNode:
 
                         # If the robot has not yet achieved the required rotation, keep rotating
                         if float("{0:.1f}".format(rotate_target_rad)) != float("{0:.1f}".format(sub.get_yaw())):
+                            move.linear.x = 0  # there is no way now to continue go forwards
                             # if difference is big, the robot will rotate faster
                             move.angular.z = kp * (
                                     rotate_target_rad - sub.get_yaw())  # Speed of the velocity to rotate
@@ -61,6 +62,7 @@ class PublisherNode:
 
                         # If the robot has not yet achieved the required rotation, keep rotating
                         if float("{0:.1f}".format(rotate_target_rad)) != float("{0:.1f}".format(sub.get_yaw())):
+                            move.linear.x = 0
                             # if difference is big, the robot will rotate faster
                             move.angular.z = kp * (
                                     rotate_target_rad - sub.get_yaw())  # Speed of the velocity to rotate
