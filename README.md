@@ -10,7 +10,7 @@ Intelligent Robotic Group 18 Final Project
 6. In a new terminal, run: " _./maze_robot_package.sh_ "
 7. In a new terminal, you can run a file for testing: " _rosrun maze_robot_package main.py_ "
 
-After the above steps, Stage ROS should be executed (due to step 6) and on your terminal you should see the grid's dictionary (due to step 7).
+After the above steps, Stage ROS should be executed (due to step 6) and you should see the robot moving straight and then upward (due to step 7).
 
 **Note**: As a target, I setup the cells in the centre of the maze (8 <= x <= 10 and 9 <= y <= 11) given _reward = 10_
 
