@@ -37,11 +37,12 @@ class PublisherNode:
                     elif direction == "up":  # Go up
                         rotate_target_degrees = 90  # how many degrees the robot will rotate
                         rotate_target_rad = rotate_target_degrees * math.pi / 180  # convert degrees to radians because yaw angle is in radians
-                        # control rotation speed * (difference between the target rotation and the current rotation of the robot)
 
                         # If the robot has not yet achieved the required rotation, keep rotating
                         if float("{0:.1f}".format(rotate_target_rad)) != float("{0:.1f}".format(sub.get_yaw())):
                             move.linear.x = 0  # there is no way now to continue go forwards
+
+                            # control rotation speed * (difference between the target rotation and the current rotation of the robot)
                             # if difference is big, the robot will rotate faster
                             move.angular.z = kp * (
                                     rotate_target_rad - sub.get_yaw())  # Speed of the velocity to rotate
