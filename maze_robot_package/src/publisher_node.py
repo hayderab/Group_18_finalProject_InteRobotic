@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+# Importing the rospy module
 import rospy
+# Import Twist() function to make the robot rotate once obtained the proper angle.
 from geometry_msgs.msg import Twist
-from math import pi
+# Importing math package for square roots, sinus and other calculations
+import math
+# Import policy_iteration.py file
 import policy_iteration
 
 
@@ -11,6 +15,7 @@ class PublisherNode:
     def mover(sub):
         pub = rospy.Publisher('cmd_vel', Twist, queue_size=100)
         rate = rospy.Rate(10)  # 10hz - do not send /cmd_vel commands too quickly
+        kp = 2  # variable to control rotation speed (hyperparameter)
 
         while not rospy.is_shutdown():
             move = Twist()
@@ -23,26 +28,54 @@ class PublisherNode:
                 # If the coordinates of the robot are included to the given dictionary (if are the same)
                 # the robot checks what the dictionary says to do at that state, then it applies that action
                 if current_position_tuple == coordinates:  # compare the two tuples
-                    if direction == "right":
-                        move.linear.x = 1.0  # Turn right
-                        pub.publish(move)  # move the robot (publish the move)
-                        print(current_position_tuple, coordinates, direction)
-                    elif direction == "left":
-                        move.linear.x = -1.0  # Turn left
-                        pub.publish(move)
-                        print(current_position_tuple, coordinates, direction)
+                    if direction == "forwards":
+                        move.linear.x = 1.0  # Speed of the velocity to go forwards
+                        print(direction)
+                    elif direction == "backwards":
+                        move.linear.x = -1.0  # Speed of the velocity to go backwards
+                        print(direction)
                     elif direction == "up":  # Go up
-                        # ref: https://get-help.robotigniteacademy.com/t/rotating-90-degrees/494
+                        rotate_target_degrees = 90  # how many degrees the robot will rotate
+                        rotate_target_rad = rotate_target_degrees * math.pi / 180  # convert degrees to radians because yaw angle is in radians
+                        # control rotation speed * (difference between the target rotation and the current rotation of the robot)
 
-                        move.angular.z = 1
-                        pub.publish(move)
+                        # If the robot has not yet achieved the required rotation, keep rotating
+                        if float("{0:.1f}".format(rotate_target_rad)) != float("{0:.1f}".format(sub.get_yaw())):
+                            # if difference is big, the robot will rotate faster
+                            move.angular.z = kp * (
+                                    rotate_target_rad - sub.get_yaw())  # Speed of the velocity to rotate
+                            pub.publish(move)
+                            print("rotate 90°")
 
-                        move.angular.z = 0  # stop rotating
-                        print(current_position_tuple, coordinates, direction)
+                        else:  # If the robot achieved the required rotation, go straight
+                            move.angular.z = 0  # put rotation velocity back to 0 (the robot is not rotating anymore)
+                            rate.sleep()
+                            move.linear.x = 1.0
+                            pub.publish(move)
+                            print("forwards")
+
                     else:  # Go down
-                        pass
+                        rotate_target_degrees = -90  # how many degrees the robot will rotate
+                        rotate_target_rad = rotate_target_degrees * math.pi / 180  # convert degrees to radians because yaw angle is in radians
+                        # control rotation speed * (difference between the target rotation and the current rotation of the robot)
 
-            rate.sleep()
+                        # If the robot has not yet achieved the required rotation, keep rotating
+                        if float("{0:.1f}".format(rotate_target_rad)) != float("{0:.1f}".format(sub.get_yaw())):
+                            # if difference is big, the robot will rotate faster
+                            move.angular.z = kp * (
+                                    rotate_target_rad - sub.get_yaw())  # Speed of the velocity to rotate
+                            pub.publish(move)
+                            print("rotate -90°")
+
+                        else:  # If the robot achieved the required rotation, go straight
+                            move.angular.z = 0  # put rotation velocity back to 0 (the robot is not rotating anymore)
+                            rate.sleep()
+                            move.linear.x = 1.0
+                            pub.publish(move)
+                            print("forwards")
+
+            pub.publish(move)  # move the robot (publish the move)
+            rate.sleep()  # give sometime to pass the info
 
     @staticmethod
     def talker(sub_obj):
