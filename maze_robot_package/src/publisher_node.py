@@ -83,5 +83,5 @@ class PublisherNode:
     @staticmethod
     def talker(sub_obj):
         # POLICY ITERATION can be called here
-        print(policy_iteration.policy_generate(sub_obj.get_dictGrid(), sub_obj.get_width_length(),
-                                               sub_obj.get_height_length(), 0.9, 1.0))
+        policy_iteration.policy_iteration(sub_obj.get_dictGrid(), sub_obj.get_width_length(),
+                                               sub_obj.get_height_length(), 0.9)

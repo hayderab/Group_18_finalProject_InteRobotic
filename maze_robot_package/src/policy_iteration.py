@@ -1,4 +1,6 @@
-def policy_generate(dicts_grid, width_length, height_length, gamma, trans):
+import maze_dictionary
+
+def policy_generate(dicts_grid, width_length, height_length, gamma):
     # Stores the dictionary with policy directions
     new_dicts_grid = {}
 
@@ -9,7 +11,7 @@ def policy_generate(dicts_grid, width_length, height_length, gamma, trans):
             # Reset at the start of each loop
             Qvalue = 0
             # Direction the policy is pointing for given coord
-            p_direction = "self"
+            p_direction = "SELF"
 
             # Check if coord is the goal state reference self in policy
             if dicts_grid[(x, y)][5]:
@@ -21,93 +23,123 @@ def policy_generate(dicts_grid, width_length, height_length, gamma, trans):
             else:
                 # Check 4 surrounding coords for highest reward
                 # Includes logic to prevent going off the grid
-                left = 0
-                down = 0
-                right = 0
-                up = 0
+                east = 0
+                south = 0
+                west = 0
+                north = 0
 
                 # Calculate Qvalue for each surround square
+                # Transition function is assumed to be 1, so it has been ommited for simplicity 
                 if not ((x + 1) >= width_length):
-                    print(dicts_grid[(x + 1, y)][3])
-                    a = gamma * dicts_grid[(x + 1, y)][3]
-                    b = dicts_grid[(x + 1, y)][2] + a
-                    left = trans * b
+                    east = dicts_grid[(x + 1, y)][2] + gamma * dicts_grid[(x + 1, y)][3]
+
                 if not ((y - 1) < 0):
-                    print(dicts_grid[(x, y - 1)][3])
-                    a = gamma * dicts_grid[(x, y - 1)][3]
-                    b = dicts_grid[(x, y - 1)][2] + a
-                    down = trans * b
+                    south = dicts_grid[(x, y - 1)][2] + gamma * dicts_grid[(x, y - 1)][3]
 
                 if not ((x - 1) < 0):
-                    print(list(dicts_grid[(x - 1, y)])[3])
-                    print(dicts_grid[(0, 0)])
-                    a = gamma * dicts_grid[(x - 1, y)][3]
-                    b = dicts_grid[(x - 1, y)][2] + a
-                    right = trans * b
+                    west = dicts_grid[(x - 1, y)][2] + gamma * dicts_grid[(x - 1, y)][3]
+
                 if not ((y + 1) >= height_length):
-                    a = gamma * dicts_grid[(x, y + 1)][3]
-                    b = dicts_grid[(x, y + 1)][2] + a
-                    up = trans * b
+                    north = dicts_grid[(x, y + 1)][2] + gamma * dicts_grid[(x, y + 1)][3]
 
-                if not ((x + 1) >= width_length) and (left > Qvalue):
-                    Qvalue = left
-                    p_direction = "left"
 
-                if not ((y - 1) < 0) and (down > Qvalue):
-                    Qvalue = down
-                    p_direction = "down"
+                # Decide which neighbor has the largest value
+                if not ((x + 1) >= width_length) and (east >= Qvalue):
+                    Qvalue = east
+                    p_direction = "EAST"
 
-                if not ((x - 1) < 0) and (right > Qvalue):
-                    Qvalue = right
-                    p_direction = "right"
+                if not ((y - 1) < 0) and (south >= Qvalue):
+                    Qvalue = south
+                    p_direction = "SOUTH"
 
-                if not ((y + 1) >= height_length) and (up > Qvalue):
-                    Qvalue = up
-                    p_direction = "up"
+                if not ((x - 1) < 0) and (west >= Qvalue):
+                    Qvalue = west
+                    p_direction = "WEST"
+
+                if not ((y + 1) >= height_length) and (north >= Qvalue):
+                    Qvalue = north
+                    p_direction = "NORTH"
 
                 # Obtain the value list for current coord to change and
                 # insert into new dictionary
                 dict_value = dicts_grid[(x, y)]
 
                 # Insert the correct policy direction
-                if p_direction == "self":
+                if p_direction == "SELF":
                     dict_value[4] = (x, y)
                     new_dicts_grid[(x, y)] = dict_value
 
-                elif p_direction == "left":
+                elif p_direction == "EAST":
                     dict_value[4] = (x + 1, y)
+                    dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
-                elif p_direction == "down":
+                elif p_direction == "SOUTH":
                     dict_value[4] = (x, y - 1)
+                    dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
-                elif p_direction == "right":
+                elif p_direction == "WEST":
                     dict_value[4] = (x - 1, y)
+                    dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
-                elif p_direction == "up":
+                elif p_direction == "NORTH":
                     dict_value[4] = (x, y + 1)
+                    dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
     return new_dicts_grid
 
 
-def reward_propagation(dicts_grid, width_length, height_length):
-    # Stores the dictionary with new rewards
+def policy_evaluation(dicts_grid, width_length, height_length, gamma):
+    # Initialise variables needed
     new_dicts_grid = {}
+    theta = 0.01
+    delta = 1
+    
+    # Perform the value itteration until the changes are insignificant, hence converged
+    while delta > theta:
+        delta = 0
+        # Loop through each coordinate
+        for y in range(0, height_length):
+            for x in range(0, width_length):
+                
+                # If its the terminal state, don't change the value
+                if dicts_grid[(x,y)][5]:
+                    new_dicts_grid[(x,y)] = dicts_grid[(x,y)]
+                
+                # update the value
+                else:
+                    coord_var = dicts_grid[(x,y)]
+                    policy_var = dicts_grid[coord_var[4]]
+                    old_value = coord_var[3]
+                    # Transition function is assumed to be 1, so it has been ommited for simplicity 
+                    new_value = policy_var[2] + gamma * policy_var[3]
+                    difference = abs(old_value - new_value)
+                    # Records the largest value change across the whole grid
+                    delta = max(delta, difference)
+                    coord_var[3] = new_value
+                    new_dicts_grid[(x,y)] = coord_var
 
-    # Loop through all coords
-    for y in range(0, height_length):
-        for x in range(0, width_length):
+        # northdate the dictionary with the new values
+        dicts_grid = new_dicts_grid
+    maze_dictionary.save_to_text_file(dicts_grid, 'results.txt')
+    return dicts_grid
 
-            if dicts_grid[(x, y)][4]:
-                new_dicts_grid[(x, y)] = dicts_grid[(x, y)]
+def policy_iteration(dicts_grid, width_length, height_length, gamma):
+    # Generate the intitial policy
+    dicts_grid = policy_generate(dicts_grid, width_length, height_length, gamma)
 
-            else:
-                value = dicts_grid[(x, y)]
-                current_reward = value[2]
-                p_coords = value[3]
-                p_reward = dicts_grid[p_coords][2]
 
-                new_reward = current_reward + p_reward
+    policy_stable = False
+
+    while not policy_stable:
+        new_dicts_grid = policy_evaluation(dicts_grid, width_length, height_length, gamma)
+        new_dicts_grid = policy_generate(new_dicts_grid, width_length, height_length, gamma)
+        if new_dicts_grid ==  dicts_grid:
+            policy_stable = True
+        dicts_grid = new_dicts_grid
+
+    print("Done!")
+    return dicts_grid
