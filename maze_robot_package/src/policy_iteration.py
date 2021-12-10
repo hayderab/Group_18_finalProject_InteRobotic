@@ -1,16 +1,14 @@
-import helper
-
+import copy
 
 def policy_generate(dicts_grid, width_length, height_length, gamma):
     # Stores the dictionary with policy directions
     new_dicts_grid = {}
-
     # Loop through all coords
     for y in range(0, height_length):
         for x in range(0, width_length):
 
             # Reset at the start of each loop
-            Qvalue = 0
+            Qvalue = -100
             # Direction the policy is pointing for given coord
             p_direction = "SELF"
 
@@ -124,8 +122,8 @@ def policy_evaluation(dicts_grid, width_length, height_length, gamma):
                     new_dicts_grid[(x, y)] = coord_var
 
         # update the dictionary with the new values
-        dicts_grid = new_dicts_grid
-    helper.save_to_text_file(dicts_grid, 'results.txt')
+        new_dicts_grid_copy = copy.deepcopy(new_dicts_grid)
+        dicts_grid = new_dicts_grid_copy
     return dicts_grid
 
 
@@ -136,11 +134,13 @@ def policy_iteration(dicts_grid, width_length, height_length, gamma):
     policy_stable = False
 
     while not policy_stable:
-        new_dicts_grid = policy_evaluation(dicts_grid, width_length, height_length, gamma)
-        new_dicts_grid = policy_generate(new_dicts_grid, width_length, height_length, gamma)
-        if new_dicts_grid == dicts_grid:
+        dicts_grid_copy = copy.deepcopy(dicts_grid)
+        new_dicts_grid = policy_evaluation(dicts_grid_copy, width_length, height_length, gamma)
+        new_dicts_grid_copy = copy.deepcopy(new_dicts_grid)
+        new_dicts_grid_evaluated = policy_generate(new_dicts_grid_copy, width_length, height_length, gamma)
+        if dicts_grid_copy == new_dicts_grid_evaluated:
             policy_stable = True
-        dicts_grid = new_dicts_grid
+        dicts_grid = new_dicts_grid_evaluated
 
-    print("Done!")
+    print("Optimal Policy Found!")
     return dicts_grid

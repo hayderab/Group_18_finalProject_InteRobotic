@@ -79,3 +79,13 @@ def calculate_rotation(target_direction, current_direction):
 
     rotate_target_rad = rotate_target_degrees * math.pi / 180  # convert degrees to radians because yaw angle is in radians
     return rotate_target_rad
+
+def test_policy(final_dict):
+    start_coord = (20,20)
+    values = final_dict[start_coord]
+    terminal = values[5]
+    while not terminal:
+        print(values[6])
+        values = final_dict[values[4]]
+        terminal = values[5]
+    print("DONE!")

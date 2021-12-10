@@ -20,9 +20,9 @@ def create_dummy_policy_dict(dummy_dict, x, y):
 # coordinates, reward, value state (default: 0), policy direction with default (-1, -1), "terminal state?" and "SOUTH/EAST/NORTH/WEST?" (default: "DEFAULT")
 def create_dict_grid(dict_grid, width_index, height_index, x, y, grid_cell):
     if grid_cell > 0:  # for obstacles
-        dict_grid[width_index, height_index] = [x, y, -1.0, 0.0, (-1, -1), False, "DEFAULT"]  # reward = -1
+        dict_grid[width_index, height_index] = [x, y, -10.0, 0.0, (-1, -1), False, "DEFAULT"]  # reward = -1
     elif grid_cell == -1:  # for unknown cells
-        dict_grid[width_index, height_index] = [x, y, -1.0, 0.0, (-1, -1), False,
+        dict_grid[width_index, height_index] = [x, y, -10.0, 0.0, (-1, -1), False,
                                                 "DEFAULT"]  # reward = -1 (safer because it can be a wall too)
     else:  # for known cells
         if (8 <= x <= 10) and (9 <= y <= 11):  # for the target goal cell (I chose for now the centre of the maze)

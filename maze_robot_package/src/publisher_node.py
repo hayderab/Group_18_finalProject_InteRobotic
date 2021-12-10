@@ -65,5 +65,6 @@ class PublisherNode:
     @staticmethod
     def talker(sub_node):
         # POLICY ITERATION can be called here
-        policy_iteration.policy_iteration(sub_node.get_dictGrid(), sub_node.get_width_length(),
+        new_dicts_grid = policy_iteration.policy_iteration(sub_node.get_dictGrid(), sub_node.get_width_length(),
                                           sub_node.get_height_length(), 0.9)
+        helper.test_policy(new_dicts_grid)
