@@ -2,9 +2,11 @@ import os
 # Importing math package for square roots, sinus and other calculations
 import math
 
-
 # This created because terminal could not print the dictionary properly
 # The file will be created/saved on your desktop
+import pickle
+
+
 def save_to_text_file(givenDict, filename):
     home_dir = os.path.expanduser('~')
     desktop_dir = os.path.join(home_dir, 'Desktop')
@@ -21,6 +23,29 @@ def save_to_text_file(givenDict, filename):
 
     except IOError as e:
         print(e)
+
+
+# Create a pickle in order to do not have to run the policy everytime
+def create_dict_pickle(dict_data, filename):
+    home_dir = os.path.expanduser('~')
+    desktop_dir = os.path.join(home_dir, 'Desktop')
+
+    pickle_file = open(os.path.join(desktop_dir, filename), "w+")
+    pickle.dump(dict_data, pickle_file)
+
+    pickle_file.close()
+
+
+def load_dict_pickle(filename):
+    home_dir = os.path.expanduser('~')
+    desktop_dir = os.path.join(home_dir, 'Desktop')
+
+    pickle_file = open(os.path.join(desktop_dir, filename), "rb")
+    pickle_dict = pickle.load(pickle_file)
+
+    pickle_file.close()
+
+    return pickle_dict
 
 
 # Finds the robot's current heading direction
@@ -80,8 +105,10 @@ def calculate_rotation(target_direction, current_direction):
     rotate_target_rad = rotate_target_degrees * math.pi / 180  # convert degrees to radians because yaw angle is in radians
     return rotate_target_rad
 
+
+# Check if the path given by the policy is the shortest
 def test_policy(final_dict):
-    start_coord = (20,20)
+    start_coord = (20, 20)
     values = final_dict[start_coord]
     terminal = values[5]
     while not terminal:

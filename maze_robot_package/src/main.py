@@ -16,7 +16,6 @@ if __name__ == '__main__':
 
         # transfer the current Subscriber object to the Publisher
         pub.talker(sub)  # transfer the dictionary and apply policy iteration
-        # pub.mover(sub)  # moves the robot based on the given instructions (dictionary)
 
         rospy.spin()  # spin() simply keeps python from exiting until this node is stopped
 

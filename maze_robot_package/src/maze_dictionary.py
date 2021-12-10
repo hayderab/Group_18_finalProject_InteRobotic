@@ -43,7 +43,7 @@ def maze_dict_grid(data):
             # Reference: https://answers.ros.org/question/201172/get-xy-coordinates-of-an-obstacle-from-a-map/?answer=262245#post-id-262245
             grid_cell = data.data[height_index * data.info.width + width_index]
             # if grid_cell > 0:  # >0 is only for the obstacles
-            x = width_index * data.info.resolution + data.info.resolution / 2  # coordinate x of the current gird cell
+            x = width_index * data.info.resolution + data.info.resolution / 2  # coordinate x of the current grid cell
             y = height_index * data.info.resolution + data.info.resolution / 2  # coordinate y of the current grid cell
             maze_dict = create_dict_grid(maze_dict, width_index, height_index, x, y, grid_cell)
             dummy_dict = create_dummy_policy_dict(dummy_dict, x, y)  # can be deleted later
