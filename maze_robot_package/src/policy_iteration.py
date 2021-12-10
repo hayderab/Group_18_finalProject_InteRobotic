@@ -1,4 +1,5 @@
-import maze_dictionary
+import helper
+
 
 def policy_generate(dicts_grid, width_length, height_length, gamma):
     # Stores the dictionary with policy directions
@@ -29,7 +30,7 @@ def policy_generate(dicts_grid, width_length, height_length, gamma):
                 north = 0
 
                 # Calculate Qvalue for each surround square
-                # Transition function is assumed to be 1, so it has been ommited for simplicity 
+                # Transition function is assumed to be 1, so it has been omitted for simplicity
                 if not ((x + 1) >= width_length):
                     east = dicts_grid[(x + 1, y)][2] + gamma * dicts_grid[(x + 1, y)][3]
 
@@ -41,7 +42,6 @@ def policy_generate(dicts_grid, width_length, height_length, gamma):
 
                 if not ((y + 1) >= height_length):
                     north = dicts_grid[(x, y + 1)][2] + gamma * dicts_grid[(x, y + 1)][3]
-
 
                 # Decide which neighbor has the largest value
                 if not ((x + 1) >= width_length) and (east >= Qvalue):
@@ -97,47 +97,48 @@ def policy_evaluation(dicts_grid, width_length, height_length, gamma):
     new_dicts_grid = {}
     theta = 0.01
     delta = 1
-    
-    # Perform the value itteration until the changes are insignificant, hence converged
+
+    # Perform the value iteration until the changes are insignificant, hence converged
     while delta > theta:
         delta = 0
         # Loop through each coordinate
         for y in range(0, height_length):
             for x in range(0, width_length):
-                
-                # If its the terminal state, don't change the value
-                if dicts_grid[(x,y)][5]:
-                    new_dicts_grid[(x,y)] = dicts_grid[(x,y)]
-                
+
+                # If it is in the terminal state, don't change the value
+                if dicts_grid[(x, y)][5]:
+                    new_dicts_grid[(x, y)] = dicts_grid[(x, y)]
+
                 # update the value
                 else:
-                    coord_var = dicts_grid[(x,y)]
+                    coord_var = dicts_grid[(x, y)]
                     policy_var = dicts_grid[coord_var[4]]
                     old_value = coord_var[3]
-                    # Transition function is assumed to be 1, so it has been ommited for simplicity 
+                    # Transition function is assumed to be 1, so it has been omitted for simplicity
+                    # Thus, the sum is also not required in the formula
                     new_value = policy_var[2] + gamma * policy_var[3]
                     difference = abs(old_value - new_value)
                     # Records the largest value change across the whole grid
                     delta = max(delta, difference)
                     coord_var[3] = new_value
-                    new_dicts_grid[(x,y)] = coord_var
+                    new_dicts_grid[(x, y)] = coord_var
 
-        # northdate the dictionary with the new values
+        # update the dictionary with the new values
         dicts_grid = new_dicts_grid
-    maze_dictionary.save_to_text_file(dicts_grid, 'results.txt')
+    helper.save_to_text_file(dicts_grid, 'results.txt')
     return dicts_grid
 
-def policy_iteration(dicts_grid, width_length, height_length, gamma):
-    # Generate the intitial policy
-    dicts_grid = policy_generate(dicts_grid, width_length, height_length, gamma)
 
+def policy_iteration(dicts_grid, width_length, height_length, gamma):
+    # Generate the initial policy
+    dicts_grid = policy_generate(dicts_grid, width_length, height_length, gamma)
 
     policy_stable = False
 
     while not policy_stable:
         new_dicts_grid = policy_evaluation(dicts_grid, width_length, height_length, gamma)
         new_dicts_grid = policy_generate(new_dicts_grid, width_length, height_length, gamma)
-        if new_dicts_grid ==  dicts_grid:
+        if new_dicts_grid == dicts_grid:
             policy_stable = True
         dicts_grid = new_dicts_grid
 

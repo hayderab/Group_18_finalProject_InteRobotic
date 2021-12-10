@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import os
-
 
 # Creates a dummy dictionary which will work as a policy
 # This is for testing the movement of t robot based given policy
@@ -12,39 +10,20 @@ def create_dummy_policy_dict(dummy_dict, x, y):
     y = float("{0:.1f}".format(y))
     # Set the following range of points (x,y) to go "right" or "up" etc.
     if (0.0 <= x < 6.0) and (0.0 <= y <= 2.0):
-        dummy_dict[x, y] = "forwards"
+        dummy_dict[x, y] = "EAST"
     if (x >= 5.9) and (0.0 <= y <= 6.0):
-        dummy_dict[x, y] = "up"
+        dummy_dict[x, y] = "NORTH"
     return dummy_dict
 
 
-# This created because terminal could not print the dictionary properly
-# The file will be created/saved on your desktop
-def save_to_text_file(givenDict, filename):
-    home_dir = os.path.expanduser('~')
-    desktop_dir = os.path.join(home_dir, 'Desktop')
-
-    try:
-        textfile = open(os.path.join(desktop_dir, filename), "w+")
-        for coordinates, values in givenDict.items():
-            textfile.write(
-                "(x_index, y_index)" + " : " + "[" + "x-coord, " + "y-coord, " + "reward, " + "value state, " + "policy direction, " + "terminal state?" + "]" + "\n")
-            textfile.write(str(coordinates) + " : " + str(values) + "\n")
-            textfile.write(" " + "\n")
-        textfile.close()
-        print("Done")
-
-    except IOError as e:
-        print(e)
-
-
 # Returns a dictionary with:
-# coordinates, reward, value state (default to 0), policy direction with default (-1, -1) and "terminal state?"
+# coordinates, reward, value state (default: 0), policy direction with default (-1, -1), "terminal state?" and "SOUTH/EAST/NORTH/WEST?" (default: "DEFAULT")
 def create_dict_grid(dict_grid, width_index, height_index, x, y, grid_cell):
     if grid_cell > 0:  # for obstacles
         dict_grid[width_index, height_index] = [x, y, -1.0, 0.0, (-1, -1), False, "DEFAULT"]  # reward = -1
     elif grid_cell == -1:  # for unknown cells
-        dict_grid[width_index, height_index] = [x, y, -1.0, 0.0, (-1, -1), False, "DEFAULT"]  # reward = -1 (safer because it can be a wall too)
+        dict_grid[width_index, height_index] = [x, y, -1.0, 0.0, (-1, -1), False,
+                                                "DEFAULT"]  # reward = -1 (safer because it can be a wall too)
     else:  # for known cells
         if (8 <= x <= 10) and (9 <= y <= 11):  # for the target goal cell (I chose for now the centre of the maze)
             dict_grid[width_index, height_index] = [x, y, 10.0, 0.0, (-1, -1), True, "DEFAULT"]  # reward = 10
@@ -70,6 +49,6 @@ def maze_dict_grid(data):
             dummy_dict = create_dummy_policy_dict(dummy_dict, x, y)  # can be deleted later
             height_index += 1
         width_index += 1
-    # save_to_text_file(maze_dict, 'results.txt')
+    # helper.save_to_text_file(dummy_dict, 'results.txt')
 
     return maze_dict, data.info.width, data.info.height, dummy_dict  # dummy_dict can be deleted later

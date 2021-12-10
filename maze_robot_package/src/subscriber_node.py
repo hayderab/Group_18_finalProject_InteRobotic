@@ -19,9 +19,9 @@ class SubscriberNode:
         self._dummy_dict = {}  # can be deleted later
 
         # yaw = current heading of the robot (to the left or to the right - in radians in respect to the maze coordinates)
-        # pointing forward - yaw = 0
-        # pointing left - yaw > 0
-        # pointing right - yaw < 0
+        # pointing EAST (x-axis directly) - yaw = 0
+        # pointing NORTH - yaw > 0
+        # pointing SOUTH and then WEST - yaw < 0
         self._roll = self._pitch = self._yaw = 0.0  # Euler angles - # Measurement of the roll/pitch/yaw/ component of the rotation of the robot
 
     # Getter methods
@@ -40,6 +40,7 @@ class SubscriberNode:
     def get_current_position_y(self):
         return self._current_position_y
 
+    # We need the yaw angle only
     def get_yaw(self):
         return self._yaw
 
@@ -48,6 +49,7 @@ class SubscriberNode:
         return self._dummy_dict
 
     def callback_rotation(self, data):
+        # Reference: https://www.theconstructsim.com/ros-qa-135-how-to-rotate-a-robot-to-a-desired-heading-using-feedback-from-odometry/
         orientation_q = data.pose.pose.orientation
         # Creating a list with the 4 values that compose the orientation quaternion of the position message
         orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
