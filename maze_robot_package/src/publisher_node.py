@@ -33,11 +33,13 @@ class PublisherNode:
             formatted_current_yaw = float("{0:.1f}".format(sub_node.get_yaw()))
 
             current_direction_str = helper.find_direction(current_direction_str, current_yaw)
-
+            
             # put current x,y in a tuple to compare with the dictionary's tuple
             current_position_tuple = (current_x, current_y)
+            print(current_position_tuple)
 
             target_direction = given_dict[current_position_tuple][6]
+            print(target_direction)
             # calculate the rotation (in radians) which the robot needs in order to do to move to the next state
             rotate_target_rad = helper.calculate_rotation(target_direction, current_direction_str)
 
@@ -60,15 +62,19 @@ class PublisherNode:
             rate.sleep()  # give sometime to pass the info
 
     def talker(self, sub_node):
-
+        #print(sub_node.get_current_position_y())
+        #policy_dict = policy_iteration.policy_generate(sub_node.get_dictGrid(), sub_node.get_width_length(),
+        #                                            sub_node.get_height_length(), 0.9)
         # Run the policy
-        print("Running Policy Iteration...")
-        policy_dict = policy_iteration.policy_iteration(sub_node.get_dictGrid(), sub_node.get_width_length(),
-                                                    sub_node.get_height_length(), 0.9)
+        #print("Running Policy Iteration...")
+        #policy_dict = policy_iteration.policy_iteration(sub_node.get_dictGrid(), sub_node.get_width_length(),
+        #                                            sub_node.get_height_length(), 0.9)
         # Create a pickle of that policy
-        helper.create_dict_pickle(policy_dict, "pickle_dict.pickle")
+        #helper.create_dict_pickle(policy_dict, "pickle_dict.pickle")
 
         policy_pickle_dict = helper.load_dict_pickle("pickle_dict.pickle")
+        #helper.test_policy(policy_pickle_dict)
+        #helper.save_to_text_file(policy_pickle_dict, "result.txt")
 
         print("Robot is moving...")
         self.mover(sub_node, policy_pickle_dict)

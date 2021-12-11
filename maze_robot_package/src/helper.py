@@ -30,7 +30,7 @@ def create_dict_pickle(dict_data, filename):
     home_dir = os.path.expanduser('~')
     desktop_dir = os.path.join(home_dir, 'Desktop')
 
-    pickle_file = open(os.path.join(desktop_dir, filename), "w+")
+    pickle_file = open(os.path.join(desktop_dir, filename), "wb")
     pickle.dump(dict_data, pickle_file)
 
     pickle_file.close()
@@ -108,7 +108,7 @@ def calculate_rotation(target_direction, current_direction):
 
 # Check if the path given by the policy is the shortest
 def test_policy(final_dict):
-    start_coord = (20, 20)
+    start_coord = (9, 9)
     values = final_dict[start_coord]
     terminal = values[5]
     while not terminal:

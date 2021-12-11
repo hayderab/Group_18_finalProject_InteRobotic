@@ -1,4 +1,5 @@
 import copy
+import random
 
 def policy_generate(dicts_grid, width_length, height_length, gamma):
     # Stores the dictionary with policy directions
@@ -8,9 +9,11 @@ def policy_generate(dicts_grid, width_length, height_length, gamma):
         for x in range(0, width_length):
 
             # Reset at the start of each loop
-            Qvalue = -100
+            Qvalue = -1000000000
             # Direction the policy is pointing for given coord
             p_direction = "SELF"
+
+            p_choices = []
 
             # Check if coord is the goal state reference self in policy
             if dicts_grid[(x, y)][5]:
@@ -42,21 +45,36 @@ def policy_generate(dicts_grid, width_length, height_length, gamma):
                     north = dicts_grid[(x, y + 1)][2] + gamma * dicts_grid[(x, y + 1)][3]
 
                 # Decide which neighbor has the largest value
-                if not ((x + 1) >= width_length) and (east >= Qvalue):
+                if not ((x + 1) >= width_length) and (east > Qvalue):
                     Qvalue = east
-                    p_direction = "EAST"
+                    p_choices.append("EAST")
+                elif not ((x + 1) >= width_length) and (east == Qvalue):
+                    p_choices.append("EAST")
 
-                if not ((y - 1) < 0) and (south >= Qvalue):
+                if not ((y - 1) < 0) and (south > Qvalue):
                     Qvalue = south
-                    p_direction = "SOUTH"
+                    p_choices = []
+                    p_choices.append("SOUTH")
+                elif not ((y - 1) < 0) and (south == Qvalue):
+                    p_choices.append("SOUTH")
 
-                if not ((x - 1) < 0) and (west >= Qvalue):
+                if not ((x - 1) < 0) and (west > Qvalue):
                     Qvalue = west
-                    p_direction = "WEST"
+                    p_choices = []
+                    p_choices.append("WEST")
+                elif not ((x - 1) < 0) and (west == Qvalue):
+                    p_choices.append("WEST")
 
-                if not ((y + 1) >= height_length) and (north >= Qvalue):
+                if not ((y + 1) >= height_length) and (north > Qvalue):
                     Qvalue = north
-                    p_direction = "NORTH"
+                    p_choices = []
+                    p_choices.append("NORTH")
+                elif not ((y + 1) >= height_length) and (north == Qvalue):
+                    p_choices.append("NORTH")
+
+                # Decide which direction to choose
+                # If there is a tie, select at random
+                p_direction = random.choice(p_choices)
 
                 # Obtain the value list for current coord to change and
                 # insert into new dictionary
@@ -132,8 +150,10 @@ def policy_iteration(dicts_grid, width_length, height_length, gamma):
     dicts_grid = policy_generate(dicts_grid, width_length, height_length, gamma)
 
     policy_stable = False
+    iteration_count = 0
 
-    while not policy_stable:
+    while not policy_stable and (iteration_count < 2000):
+        print("Iteration Number: " + str(iteration_count))
         dicts_grid_copy = copy.deepcopy(dicts_grid)
         new_dicts_grid = policy_evaluation(dicts_grid_copy, width_length, height_length, gamma)
         new_dicts_grid_copy = copy.deepcopy(new_dicts_grid)
@@ -141,6 +161,7 @@ def policy_iteration(dicts_grid, width_length, height_length, gamma):
         if dicts_grid_copy == new_dicts_grid_evaluated:
             policy_stable = True
         dicts_grid = new_dicts_grid_evaluated
+        iteration_count += 1
 
     print("Optimal Policy Found!")
     return dicts_grid
