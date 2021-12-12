@@ -18,7 +18,7 @@ define topurg ranger
 
 define pioneer position
 (
-  size [0.45 0.45 0.25]
+  size [0.5 0.5 0.25]
   origin [0 0 0 0]
   gui_nose 1
   drive "diff"
@@ -59,12 +59,12 @@ window
 # load an environment bitmap
 floorplan
 ( 
-  name "maze4"
-  bitmap "maze4.pgm"
-  size [20.0 20.0 0.5]
-  pose [ 10 10 0 0 ]
+  name "maze"
+  bitmap "mazeS.pgm"
+  size [7.4 7.2 0.5]
+  pose [ 3.8 3.8 0 0 ]
 )
 
 # throw in a robot
-pioneer( pose [ 1 1 0 0 ] name "robot" color "blue")
+pioneer( pose [ 2 2 0 0 ] name "robot" color "blue")
 #block( pose [ -24.269 48.001 0 180.000 ] color "red")
