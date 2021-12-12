@@ -27,10 +27,17 @@ class PublisherNode:
             # keep just the first 2 digits of the floats (for easier comparison)
             current_x = int(
                 (float("{0:.1f}".format(sub_node.get_current_position_x()))) // 0.1)  # Occupancy Grid format x
+            if (current_x % 2) == 1:
+                current_x -= 1
             current_y = int(
                 (float("{0:.1f}".format(sub_node.get_current_position_y()))) // 0.1)  # Occupancy Grid format y
+            if (current_y % 2) == 1:
+                current_y -= 1
             current_yaw = sub_node.get_yaw()
             formatted_current_yaw = float("{0:.1f}".format(sub_node.get_yaw()))
+
+            if given_dict[(current_x, current_y)][5]:
+                rospy.signal_shutdown("Reached terminal state")
 
             current_direction_str = helper.find_direction(current_direction_str, current_yaw)
             
@@ -66,15 +73,15 @@ class PublisherNode:
         #policy_dict = policy_iteration.policy_generate(sub_node.get_dictGrid(), sub_node.get_width_length(),
         #                                            sub_node.get_height_length(), 0.9)
         # Run the policy
-        #print("Running Policy Iteration...")
-        #policy_dict = policy_iteration.policy_iteration(sub_node.get_dictGrid(), sub_node.get_width_length(),
-        #                                            sub_node.get_height_length(), 0.9)
+        print("Running Policy Iteration...")
+        policy_dict = policy_iteration.policy_iteration(sub_node.get_dictGrid(), sub_node.get_width_length(),
+                                                    sub_node.get_height_length(), 0.9)
         # Create a pickle of that policy
-        #helper.create_dict_pickle(policy_dict, "pickle_dict.pickle")
+        helper.create_dict_pickle(policy_dict, "pickle_dict.pickle")
 
         policy_pickle_dict = helper.load_dict_pickle("pickle_dict.pickle")
         #helper.test_policy(policy_pickle_dict)
-        #helper.save_to_text_file(policy_pickle_dict, "result.txt")
+        helper.save_to_text_file(policy_pickle_dict, "result.txt")
 
         print("Robot is moving...")
         self.mover(sub_node, policy_pickle_dict)

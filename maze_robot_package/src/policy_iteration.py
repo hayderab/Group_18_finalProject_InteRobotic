@@ -5,8 +5,8 @@ def policy_generate(dicts_grid, width_length, height_length, gamma):
     # Stores the dictionary with policy directions
     new_dicts_grid = {}
     # Loop through all coords
-    for y in range(0, height_length):
-        for x in range(0, width_length):
+    for y in range(0, height_length, 2):
+        for x in range(0, width_length, 2):
 
             # Reset at the start of each loop
             Qvalue = -1000000000
@@ -32,44 +32,44 @@ def policy_generate(dicts_grid, width_length, height_length, gamma):
 
                 # Calculate Qvalue for each surround square
                 # Transition function is assumed to be 1, so it has been omitted for simplicity
-                if not ((x + 1) >= width_length):
-                    east = dicts_grid[(x + 1, y)][2] + gamma * dicts_grid[(x + 1, y)][3]
+                if not ((x + 2) >= width_length):
+                    east = dicts_grid[(x + 2, y)][2] + gamma * dicts_grid[(x + 2, y)][3]
 
-                if not ((y - 1) < 0):
-                    south = dicts_grid[(x, y - 1)][2] + gamma * dicts_grid[(x, y - 1)][3]
+                if not ((y - 2) < 0):
+                    south = dicts_grid[(x, y - 2)][2] + gamma * dicts_grid[(x, y - 2)][3]
 
-                if not ((x - 1) < 0):
-                    west = dicts_grid[(x - 1, y)][2] + gamma * dicts_grid[(x - 1, y)][3]
+                if not ((x - 2) < 0):
+                    west = dicts_grid[(x - 2, y)][2] + gamma * dicts_grid[(x - 2, y)][3]
 
-                if not ((y + 1) >= height_length):
-                    north = dicts_grid[(x, y + 1)][2] + gamma * dicts_grid[(x, y + 1)][3]
+                if not ((y + 2) >= height_length):
+                    north = dicts_grid[(x, y + 2)][2] + gamma * dicts_grid[(x, y + 2)][3]
 
                 # Decide which neighbor has the largest value
-                if not ((x + 1) >= width_length) and (east > Qvalue):
+                if not ((x + 2) >= width_length) and (east > Qvalue):
                     Qvalue = east
                     p_choices.append("EAST")
-                elif not ((x + 1) >= width_length) and (east == Qvalue):
+                elif not ((x + 2) >= width_length) and (east == Qvalue):
                     p_choices.append("EAST")
 
-                if not ((y - 1) < 0) and (south > Qvalue):
+                if not ((y - 2) < 0) and (south > Qvalue):
                     Qvalue = south
                     p_choices = []
                     p_choices.append("SOUTH")
-                elif not ((y - 1) < 0) and (south == Qvalue):
+                elif not ((y - 2) < 0) and (south == Qvalue):
                     p_choices.append("SOUTH")
 
-                if not ((x - 1) < 0) and (west > Qvalue):
+                if not ((x - 2) < 0) and (west > Qvalue):
                     Qvalue = west
                     p_choices = []
                     p_choices.append("WEST")
-                elif not ((x - 1) < 0) and (west == Qvalue):
+                elif not ((x - 2) < 0) and (west == Qvalue):
                     p_choices.append("WEST")
 
-                if not ((y + 1) >= height_length) and (north > Qvalue):
+                if not ((y + 2) >= height_length) and (north > Qvalue):
                     Qvalue = north
                     p_choices = []
                     p_choices.append("NORTH")
-                elif not ((y + 1) >= height_length) and (north == Qvalue):
+                elif not ((y + 2) >= height_length) and (north == Qvalue):
                     p_choices.append("NORTH")
 
                 # Decide which direction to choose
@@ -86,22 +86,22 @@ def policy_generate(dicts_grid, width_length, height_length, gamma):
                     new_dicts_grid[(x, y)] = dict_value
 
                 elif p_direction == "EAST":
-                    dict_value[4] = (x + 1, y)
+                    dict_value[4] = (x + 2, y)
                     dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
                 elif p_direction == "SOUTH":
-                    dict_value[4] = (x, y - 1)
+                    dict_value[4] = (x, y - 2)
                     dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
                 elif p_direction == "WEST":
-                    dict_value[4] = (x - 1, y)
+                    dict_value[4] = (x - 2, y)
                     dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
                 elif p_direction == "NORTH":
-                    dict_value[4] = (x, y + 1)
+                    dict_value[4] = (x, y + 2)
                     dict_value[6] = p_direction
                     new_dicts_grid[(x, y)] = dict_value
 
@@ -118,8 +118,8 @@ def policy_evaluation(dicts_grid, width_length, height_length, gamma):
     while delta > theta:
         delta = 0
         # Loop through each coordinate
-        for y in range(0, height_length):
-            for x in range(0, width_length):
+        for y in range(0, height_length, 2):
+            for x in range(0, width_length, 2):
 
                 # If it is in the terminal state, don't change the value
                 if dicts_grid[(x, y)][5]:

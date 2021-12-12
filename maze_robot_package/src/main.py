@@ -7,7 +7,7 @@ import subscriber_node
 if __name__ == '__main__':
     try:
         # centralize the initialization of the node to run Publisher and Subscriber nodes at once
-        rospy.init_node('maze_robot_node', anonymous=True)
+        rospy.init_node('maze_robot_node', anonymous=True, disable_signals=True)
         pub = publisher_node.PublisherNode()  # create a PublisherNode object
         sub = subscriber_node.SubscriberNode()  # create a SubscriberNode object
 

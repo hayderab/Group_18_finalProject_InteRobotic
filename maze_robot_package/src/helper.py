@@ -108,7 +108,7 @@ def calculate_rotation(target_direction, current_direction):
 
 # Check if the path given by the policy is the shortest
 def test_policy(final_dict):
-    start_coord = (9, 9)
+    start_coord = (20, 20)
     values = final_dict[start_coord]
     terminal = values[5]
     while not terminal:
