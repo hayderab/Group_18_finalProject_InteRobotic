@@ -46,6 +46,16 @@ def maze_dict_grid(data):
     width = data.info.width
     height = data.info.height
 
+    # Modify the terminal position here
+    # I chose as default the centre of the maze
+    terminal_x = 9.0
+    terminal_y = 9.0
+
+    # Specify the rewards here
+    negative_reward = -100.0
+    positive_reward = 10.0
+    default_reward = 0.0
+
     for y_index in range(0, height, 2):
         for x_index in range(0, width, 2):
             # Reference: https://answers.ros.org/question/201172/get-xy-coordinates-of-an-obstacle-from-a-map/?answer=262245#post-id-262245
@@ -53,16 +63,6 @@ def maze_dict_grid(data):
 
             x = x_index * data.info.resolution + data.info.resolution / 2  # coordinate x of the current grid cell
             y = y_index * data.info.resolution + data.info.resolution / 2  # coordinate y of the current grid cell
-
-            # Modify the terminal position here
-            # I chose as default the centre of the maze
-            terminal_x = 9.0
-            terminal_y = 9.0
-
-            # Specify the rewards here
-            negative_reward = -100.0
-            positive_reward = 10.0
-            default_reward = 0.0
 
             maze_dict = create_dict_grid(maze_dict, x_index, y_index, x, y, terminal_x, terminal_y, occ_grid_value,
                                          negative_reward, positive_reward, default_reward)
