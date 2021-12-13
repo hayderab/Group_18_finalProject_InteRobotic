@@ -1,167 +1,194 @@
 import copy
 import random
 
-def policy_generate(dicts_grid, width_length, height_length, gamma):
-    # Stores the dictionary with policy directions
-    new_dicts_grid = {}
+
+def policy_generate(maze_dict, width_length, height_length, gamma):
+    # Initialise the dictionary with the policy's directions
+    policy_generate_dict = {}
+
     # Loop through all coords
-    for y in range(0, height_length, 2):
-        for x in range(0, width_length, 2):
+    for y_index in range(0, height_length, 2):
+        for x_index in range(0, width_length, 2):
 
-            # Reset at the start of each loop
-            Qvalue = -1000000000
-            # Direction the policy is pointing for given coord
-            p_direction = "SELF"
+            # Initialize a max variable for storing the best q-value
+            q_best = -1000000000
 
-            p_choices = []
+            # a list which will store the available choices for the robot to move (for each state/loop)
+            p_choices = ["DEFAULT"]  # default value
 
-            # Check if coord is the goal state reference self in policy
-            if dicts_grid[(x, y)][5]:
-                value = dicts_grid[(x, y)]
-                value[4] = (x, y)
-                new_dicts_grid[(x, y)] = value
+            # Take the value of the "terminal flag" (boolean flag)
+            # coming from the current "key:value" pair of the "maze_dict"
+            # which has the current coordinate indexes (x_index, y_index) as a key
+            terminal_state_flag = maze_dict[(x_index, y_index)][5]  # returns True or False
+
+            # If the above terminal flag is True (represents the terminal state)
+            if terminal_state_flag:
+                # maze_dict -> [<key> : <value>]
+                # store the <value> which is a list of values, where <key> = (x_index, y_index)
+                list_of_maze_dict_values = maze_dict[(x_index, y_index)]
+                # update the policy direction coordinates (which is a tuple and value/element of that list)
+                list_of_maze_dict_values[4] = (x_index, y_index)
+                # append the current values of the list to our policy dictionary
+                policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values
 
             # Generate a policy direction for the path
             else:
-                # Check 4 surrounding coords for highest reward
-                # Includes logic to prevent going off the grid
-                east = 0
-                south = 0
-                west = 0
-                north = 0
 
-                # Calculate Qvalue for each surround square
-                # Transition function is assumed to be 1, so it has been omitted for simplicity
-                if not ((x + 2) >= width_length):
-                    east = dicts_grid[(x + 2, y)][2] + gamma * dicts_grid[(x + 2, y)][3]
+                # Calculate the state value for each surround state
+                # Includes logic to prevent going off the grid (NOT >=width_length, >=height_length)
+                # Note: Transition function is assumed to be 1, so it has been omitted for simplicity
+                if not ((x_index + 2) >= width_length):
+                    east_reward = maze_dict[(x_index + 2, y_index)][2]  # r
+                    next_east_state_value = maze_dict[(x_index + 2, y_index)][3]  # V(s')
+                    east_state_value = east_reward + gamma * next_east_state_value  # V(s) = r + gamma * V(s')
 
-                if not ((y - 2) < 0):
-                    south = dicts_grid[(x, y - 2)][2] + gamma * dicts_grid[(x, y - 2)][3]
+                    # Decide which neighbor has the largest value
+                    if east_state_value > q_best:
+                        q_best = east_state_value
+                        p_choices = ["EAST"]
+                    elif east_state_value == q_best:
+                        p_choices.append("EAST")
 
-                if not ((x - 2) < 0):
-                    west = dicts_grid[(x - 2, y)][2] + gamma * dicts_grid[(x - 2, y)][3]
+                if not ((y_index - 2) < 0):
+                    south_reward = maze_dict[(x_index, y_index - 2)][2]
+                    next_south_state_value = maze_dict[(x_index, y_index - 2)][3]
+                    south_state_value = south_reward + gamma * next_south_state_value
 
-                if not ((y + 2) >= height_length):
-                    north = dicts_grid[(x, y + 2)][2] + gamma * dicts_grid[(x, y + 2)][3]
+                    if south_state_value > q_best:
+                        q_best = south_state_value
+                        p_choices = ["SOUTH"]
+                    elif south_state_value == q_best:
+                        p_choices.append("SOUTH")
 
-                # Decide which neighbor has the largest value
-                if not ((x + 2) >= width_length) and (east > Qvalue):
-                    Qvalue = east
-                    p_choices.append("EAST")
-                elif not ((x + 2) >= width_length) and (east == Qvalue):
-                    p_choices.append("EAST")
+                if not ((x_index - 2) < 0):
+                    west_reward = maze_dict[(x_index - 2, y_index)][2]
+                    next_west_state_value = maze_dict[(x_index - 2, y_index)][3]
+                    west_state_value = west_reward + gamma * next_west_state_value
 
-                if not ((y - 2) < 0) and (south > Qvalue):
-                    Qvalue = south
-                    p_choices = []
-                    p_choices.append("SOUTH")
-                elif not ((y - 2) < 0) and (south == Qvalue):
-                    p_choices.append("SOUTH")
+                    if west_state_value > q_best:
+                        q_best = west_state_value
+                        p_choices = ["WEST"]
+                    elif west_state_value == q_best:
+                        p_choices.append("WEST")
 
-                if not ((x - 2) < 0) and (west > Qvalue):
-                    Qvalue = west
-                    p_choices = []
-                    p_choices.append("WEST")
-                elif not ((x - 2) < 0) and (west == Qvalue):
-                    p_choices.append("WEST")
+                if not ((y_index + 2) >= height_length):
+                    north_reward = maze_dict[(x_index, y_index + 2)][2]
+                    next_north_state_value = maze_dict[(x_index, y_index + 2)][3]
+                    north_state_value = north_reward + gamma * next_north_state_value
 
-                if not ((y + 2) >= height_length) and (north > Qvalue):
-                    Qvalue = north
-                    p_choices = []
-                    p_choices.append("NORTH")
-                elif not ((y + 2) >= height_length) and (north == Qvalue):
-                    p_choices.append("NORTH")
+                    if north_state_value > q_best:
+                        q_best = north_state_value
+                        p_choices = ["NORTH"]
+                    elif north_state_value == q_best:
+                        p_choices.append("NORTH")
 
-                # Decide which direction to choose
+                # Initialise the policy direction (string) - Policy tells where the robot should move
                 # If there is a tie, select at random
                 p_direction = random.choice(p_choices)
 
-                # Obtain the value list for current coord to change and
-                # insert into new dictionary
-                dict_value = dicts_grid[(x, y)]
+                # maze_dict -> [<key> : <value>]
+                # store the <value> which is a list of values, where <key> = (x_index, y_index)
+                list_of_maze_dict_values = maze_dict[(x_index, y_index)]
 
                 # Insert the correct policy direction
-                if p_direction == "SELF":
-                    dict_value[4] = (x, y)
-                    new_dicts_grid[(x, y)] = dict_value
+                if p_direction == "DEFAULT":
+                    list_of_maze_dict_values[4] = (x_index, y_index)
+                    policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values
 
                 elif p_direction == "EAST":
-                    dict_value[4] = (x + 2, y)
-                    dict_value[6] = p_direction
-                    new_dicts_grid[(x, y)] = dict_value
+                    list_of_maze_dict_values[4] = (x_index + 2, y_index)  # update policy direction (tuple)
+                    list_of_maze_dict_values[6] = p_direction  # update policy direction (string)
+                    policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values
 
                 elif p_direction == "SOUTH":
-                    dict_value[4] = (x, y - 2)
-                    dict_value[6] = p_direction
-                    new_dicts_grid[(x, y)] = dict_value
+                    list_of_maze_dict_values[4] = (x_index, y_index - 2)
+                    list_of_maze_dict_values[6] = p_direction
+                    policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values
 
                 elif p_direction == "WEST":
-                    dict_value[4] = (x - 2, y)
-                    dict_value[6] = p_direction
-                    new_dicts_grid[(x, y)] = dict_value
+                    list_of_maze_dict_values[4] = (x_index - 2, y_index)
+                    list_of_maze_dict_values[6] = p_direction
+                    policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values
 
                 elif p_direction == "NORTH":
-                    dict_value[4] = (x, y + 2)
-                    dict_value[6] = p_direction
-                    new_dicts_grid[(x, y)] = dict_value
+                    list_of_maze_dict_values[4] = (x_index, y_index + 2)
+                    list_of_maze_dict_values[6] = p_direction
+                    policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values
 
-    return new_dicts_grid
+    return policy_generate_dict
 
 
-def policy_evaluation(dicts_grid, width_length, height_length, gamma):
+def policy_evaluation(policy_dict, width_length, height_length, gamma):
     # Initialise variables needed
-    new_dicts_grid = {}
+    policy_evaluation_dict = {}
     theta = 0.01
-    delta = 1
+    delta = 1  # to get inside in the first while loop
 
     # Perform the value iteration until the changes are insignificant, hence converged
     while delta > theta:
         delta = 0
         # Loop through each coordinate
-        for y in range(0, height_length, 2):
-            for x in range(0, width_length, 2):
+        for y_index in range(0, height_length, 2):
+            for x_index in range(0, width_length, 2):
 
                 # If it is in the terminal state, don't change the value
-                if dicts_grid[(x, y)][5]:
-                    new_dicts_grid[(x, y)] = dicts_grid[(x, y)]
+                terminal_state_flag = policy_dict[(x_index, y_index)][5]
+                if terminal_state_flag:
+                    policy_evaluation_dict[(x_index, y_index)] = policy_dict[(x_index, y_index)]
 
-                # update the value
+                # Update the value
                 else:
-                    coord_var = dicts_grid[(x, y)]
-                    policy_var = dicts_grid[coord_var[4]]
-                    old_value = coord_var[3]
+                    # a list with values of the "policy_dict" which has the current state coordinate indexes as key
+                    state_coordinates_list = policy_dict[(x_index, y_index)]
+
+                    # a list with values of the "policy_dict" that has the policy direction coordinate indexes as key
+                    policy_coordinate_list = policy_dict[state_coordinates_list[4]]
+
+                    old_value = state_coordinates_list[3]  # u = V(s)
+
                     # Transition function is assumed to be 1, so it has been omitted for simplicity
                     # Thus, the sum is also not required in the formula
-                    new_value = policy_var[2] + gamma * policy_var[3]
-                    difference = abs(old_value - new_value)
+                    reward = policy_coordinate_list[2]  # r
+                    next_state_value = policy_coordinate_list[3]  # V(s')
+                    new_value = reward + gamma * next_state_value  # V(s) = r + gamma * V(s')
+
+                    difference = abs(old_value - new_value)  # |u - V(s)|
+
                     # Records the largest value change across the whole grid
-                    delta = max(delta, difference)
-                    coord_var[3] = new_value
-                    new_dicts_grid[(x, y)] = coord_var
+                    delta = max(delta, difference)  # max(Delta, |u - V(s)|)
 
-        # update the dictionary with the new values
-        new_dicts_grid_copy = copy.deepcopy(new_dicts_grid)
-        dicts_grid = new_dicts_grid_copy
-    return dicts_grid
+                    state_coordinates_list[3] = new_value  # update the state with a new value
+                    policy_evaluation_dict[(x_index, y_index)] = state_coordinates_list
+
+    return policy_evaluation_dict
 
 
-def policy_iteration(dicts_grid, width_length, height_length, gamma):
-    # Generate the initial policy
-    dicts_grid = policy_generate(dicts_grid, width_length, height_length, gamma)
+def policy_iteration(maze_dict, width_length, height_length, gamma):
+    print("Running Policy Iteration...")
+
+    # Generate the initial policy based on the given maze_dict
+    policy_dict = policy_generate(maze_dict, width_length, height_length, gamma)
 
     policy_stable = False
     iteration_count = 0
 
     while not policy_stable and (iteration_count < 2000):
         print("Iteration Number: " + str(iteration_count))
-        dicts_grid_copy = copy.deepcopy(dicts_grid)
-        new_dicts_grid = policy_evaluation(dicts_grid_copy, width_length, height_length, gamma)
-        new_dicts_grid_copy = copy.deepcopy(new_dicts_grid)
-        new_dicts_grid_evaluated = policy_generate(new_dicts_grid_copy, width_length, height_length, gamma)
-        if dicts_grid_copy == new_dicts_grid_evaluated:
+
+        # Create a copy of the above "policy_dict" and run the policy evaluation
+        policy_dict_copy = copy.deepcopy(policy_dict)
+        policy_evaluation_dict = policy_evaluation(policy_dict_copy, width_length, height_length, gamma)
+
+        # Create a copy of the "policy_evaluation_dict" and generate a new policy based on that copy
+        policy_evaluation_dict_copy = copy.deepcopy(policy_evaluation_dict)
+        new_policy_dict = policy_generate(policy_evaluation_dict_copy, width_length, height_length, gamma)
+
+        # If the previous policy (the copy) is identical with the new policy, policy iteration ends (hence converge)
+        if policy_dict_copy == new_policy_dict:
             policy_stable = True
-        dicts_grid = new_dicts_grid_evaluated
+
+        policy_dict = new_policy_dict
         iteration_count += 1
 
     print("Optimal Policy Found!")
-    return dicts_grid
+    return policy_dict

@@ -1,5 +1,5 @@
-# Group_18_finalProject_InteRobotic
-Intelligent Robotic Group 18 Final Project
+# Group_18_finalProject_InteRobotic - University of Birmingham
+This is our final project for the Intelligent Robotic module. The aim of the project was to apply the MDP technique in order for the robot to find the shortest path in the maze and reach the terminal state.
 
 ## How to run
 1. Copy and place the "_maze_robot_package_" folder at: _'/home/'$USER'/catkin_ws/src'_
@@ -10,9 +10,9 @@ Intelligent Robotic Group 18 Final Project
 6. In a new terminal, run: " _./maze_robot_package.sh_ "
 7. In a new terminal, you can run a file for testing: " _rosrun maze_robot_package main.py_ "
 
-After the above steps, Stage ROS should be executed (due to step 6) and you should see the robot moving straight and then upward (due to step 7).
+After the above steps, Stage ROS should be executed (due to step 6) and then you should see the robot move to reach the terminal stage in the maze following the policy instructions (due to step 7).
 
-**Note**: As a target, I setup the cells in the centre of the maze (8 <= x <= 10 and 9 <= y <= 11) given _reward = 10_
+**Note**: As a target, I setup a cell in the centre of the maze (x=9, y=9)
 
 ## Extra
 If you face any issues, try to rebuild the package from scratch, please use the following link as a guide: 
