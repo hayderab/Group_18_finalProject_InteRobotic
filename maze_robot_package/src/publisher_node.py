@@ -32,13 +32,15 @@ class PublisherNode:
             # keep just the first 2 digits of the floats (for easier comparison)
             current_x = int(
                 (float("{0:.1f}".format(sub_node.get_current_position_x()))) // 0.1)  # Occupancy Grid format x
-            # ADD Comment here
+            
+            # Convert the coordinate to be a multiple of 2
             if (current_x % 2) == 1:
                 current_x -= 1
 
             current_y = int(
                 (float("{0:.1f}".format(sub_node.get_current_position_y()))) // 0.1)  # Occupancy Grid format y
-            # ADD Comment here
+            
+            # Convert the coordinate to be a multiple of 2
             if (current_y % 2) == 1:
                 current_y -= 1
 

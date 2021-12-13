@@ -3,10 +3,13 @@
 import copy
 
 
-# Add comments here
-def wall_thicc(maze_dict_copy, width, height, x, y):
-    for y_buffer in range(y - 4, y + 5, 2):
-        for x_buffer in range(x - 4, x + 5, 2):
+# Helper function to add a buffer around the maze walls
+# spaces the robot away from the wall to prevent crashing
+def wall_buffer(maze_dict_copy, width, height, x, y, buffer_size):
+    for y_buffer in range(y - buffer_size, y + (buffer_size+1), 2):
+        for x_buffer in range(x - buffer_size, x + (buffer_size+1), 2):
+            # replace every cell near the wall with a cost to discourage
+            # the robot from pathing there
             if not (x_buffer >= width) and not (x_buffer < 0) and not (y_buffer >= height) and not (y_buffer < 0):
                 value = maze_dict_copy[(x_buffer, y_buffer)]
                 value[2] = -100.0
@@ -67,13 +70,14 @@ def maze_dict_grid(data):
             maze_dict = create_dict_grid(maze_dict, x_index, y_index, x, y, terminal_x, terminal_y, occ_grid_value,
                                          negative_reward, positive_reward, default_reward)
 
-    # Add comments here
+    # Check each cell, if it is a wall then add in a buffer
     maze_dict_copy = copy.deepcopy(maze_dict)
     for y_index in range(0, height, 2):
         for x_index in range(0, width, 2):
             coord_values = maze_dict[(x_index, y_index)]
             if coord_values[2] == -100:
                 # print("Wall hit")
-                maze_dict_copy = wall_thicc(maze_dict_copy, width, height, x_index, y_index)
+                # Call the wall_buffer function to change surrounding cells
+                maze_dict_copy = wall_buffer(maze_dict_copy, width, height, x_index, y_index, 4)
 
     return maze_dict_copy, width, height
