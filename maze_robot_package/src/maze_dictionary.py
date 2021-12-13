@@ -22,7 +22,8 @@ def wall_thicc(maze_dict_copy, width, height, x, y):
 # [4] policy direction (default indexes: (-1, -1))
 # [5] "terminal state?" boolean flag (True/False)
 # [6] "SOUTH/EAST/NORTH/WEST?" (default value: "DEFAULT")
-def create_dict_grid(dict_grid, x_index, y_index, x, y, terminal_x, terminal_y, occ_grid_value, ):
+def create_dict_grid(dict_grid, x_index, y_index, x, y, terminal_x, terminal_y, occ_grid_value, negative_reward,
+                     positive_reward, default_reward):
     if occ_grid_value == 0:  # for known cells
 
         # keep just the first 2 digits of the floats (for easier comparison)
@@ -30,12 +31,12 @@ def create_dict_grid(dict_grid, x_index, y_index, x, y, terminal_x, terminal_y, 
         formatted_y = int((float("{0:.1f}".format(y))))
 
         if (formatted_x == terminal_x) and (formatted_y == terminal_y):  # for the target goal cell(s)
-            dict_grid[x_index, y_index] = [x, y, 10.0, 0.0, (-1, -1), True, "DEFAULT"]  # positive reward = 10
+            dict_grid[x_index, y_index] = [x, y, positive_reward, 0.0, (-1, -1), True, "DEFAULT"]  # positive reward=10
         else:
-            dict_grid[x_index, y_index] = [x, y, 0.0, 0.0, (-1, -1), False, "DEFAULT"]  # reward = 0
+            dict_grid[x_index, y_index] = [x, y, default_reward, 0.0, (-1, -1), False, "DEFAULT"]  # reward = 0
 
     else:  # for >0 (obstacles) and == -1 (unknown cells)
-        dict_grid[x_index, y_index] = [x, y, -100.0, 0.0, (-1, -1), False, "DEFAULT"]  # negative reward = -100
+        dict_grid[x_index, y_index] = [x, y, negative_reward, 0.0, (-1, -1), False, "DEFAULT"]  # negative reward = -100
     return dict_grid
 
 
@@ -58,7 +59,13 @@ def maze_dict_grid(data):
             terminal_x = 9.0
             terminal_y = 9.0
 
-            maze_dict = create_dict_grid(maze_dict, x_index, y_index, x, y, terminal_x, terminal_y, occ_grid_value)
+            # Specify the rewards here
+            negative_reward = -100.0
+            positive_reward = 10.0
+            default_reward = 0.0
+
+            maze_dict = create_dict_grid(maze_dict, x_index, y_index, x, y, terminal_x, terminal_y, occ_grid_value,
+                                         negative_reward, positive_reward, default_reward)
 
     # Add comments here
     maze_dict_copy = copy.deepcopy(maze_dict)
