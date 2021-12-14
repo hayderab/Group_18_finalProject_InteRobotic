@@ -51,6 +51,7 @@ class PublisherNode:
             if policy_dict[(current_x, current_y)][5]:
                 rospy.signal_shutdown("Reached terminal state")
                 print("Congratulations!!! The robot has reached the terminal state!")
+                time.sleep(5)  # Show the message for 5 secs
                 break
 
             # Get the current heading of the Robot
@@ -76,11 +77,11 @@ class PublisherNode:
                 # control rotation speed * (difference between the target rotation and the current rotation of the robot)
                 # If difference is big, the robot will rotate faster
                 move.angular.z = kp * (
-                        rotate_target_rad - current_yaw)  # Speed of the velocity to rotate
+                        rotate_target_rad - current_yaw)  # rotate/angular speed
                 print("rotate")
 
             else:  # If the robot achieved the required rotation, go straight
-                move.linear.x = 1.0
+                move.linear.x = 0.5  # linear speed (try to keep it small)
                 print(target_direction)
 
             pub.publish(move)  # move the robot (publish the move)

@@ -13,9 +13,6 @@ def policy_generate(maze_dict, width_length, height_length, gamma):
             # Initialize a max variable for storing the best q-value
             q_best = -1000000000
 
-            # Initialise the policy direction (string) - Policy tells where the robot should move
-            p_direction = "SELF"
-
             # a list which will store the available choices for the robot to move (for each state/loop)
             p_choices = []
 
@@ -89,7 +86,7 @@ def policy_generate(maze_dict, width_length, height_length, gamma):
                 elif not ((y_index + 2) >= height_length) and (north_state_value == q_best):
                     p_choices.append("NORTH")
 
-                # Decide which direction to choose
+                # Initialise the policy direction (string) - Policy decides where the robot should move
                 # If there is a tie, select at random
                 p_direction = random.choice(p_choices)
 
@@ -98,11 +95,7 @@ def policy_generate(maze_dict, width_length, height_length, gamma):
                 list_of_maze_dict_values = maze_dict[(x_index, y_index)]
 
                 # Insert the correct policy direction
-                if p_direction == "SELF":
-                    list_of_maze_dict_values[4] = (x_index, y_index)
-                    policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values
-
-                elif p_direction == "EAST":
+                if p_direction == "EAST":
                     list_of_maze_dict_values[4] = (x_index + 2, y_index)  # update policy direction (tuple)
                     list_of_maze_dict_values[6] = p_direction  # update policy direction (string)
                     policy_generate_dict[(x_index, y_index)] = list_of_maze_dict_values

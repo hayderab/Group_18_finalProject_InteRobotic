@@ -7,3 +7,5 @@ sleep 4
 gnome-terminal -x bash -c "rosrun stage_ros stageros '/home/'$USER'/catkin_ws/src/maze_robot_package/data/maps/maze.world'" xdotool getactivewindow windowminimize
 sleep 4
 gnome-terminal -x bash -c "roslaunch socspioneer keyboard_teleop.launch" xdotool getactivewindow windowminimize
+sleep 4
+gnome-terminal -e "rosrun maze_robot_package main.py"
