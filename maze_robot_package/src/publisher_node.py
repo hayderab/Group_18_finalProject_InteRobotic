@@ -102,6 +102,7 @@ class PublisherNode:
         # helper.create_dict_pickle(policy_dict, "pickle_dict.pickle")
 
         # Load the pickle file (from the project's data directory)
+        # works for the same terminal state when the policy was created, and for any starting point
         policy_pickle_dict = helper.load_dict_pickle("pickle_dict.pickle")
 
         # Test/Print the given policy for analysing
