@@ -1,4 +1,4 @@
-# Intelligent Robotics Project - Applying MDP to Maze Navigator Robot
+# Intelligent Robotics Project - Applying MDP to Maze Navigator Robot Systems
 **School of Computer Science - University of Birmingham 2021-2022**
 
 **Authors: Haider Abbasi, Georgios Karanasios and Huw Ranscombe-Smith**
