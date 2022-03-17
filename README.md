@@ -3,7 +3,7 @@
 
 **Authors: Haider Abbasi, Georgios Karanasios and Huw Ranscombe-Smith**
 
-This is our final project for the Intelligent Robotic module. The aim of the project was to apply the MDP technique called "policy iteration" in order for the robot to find the shortest path in the maze and reach the terminal state.
+This is our final project for the Intelligent Robotic module. The aim of the project was to apply the MDP technique called "policy iteration" in order for the robot to find the shortest path in the maze and reach the terminal state. A report (in pdf format) for more information about the project is also provided.
 
 ## How to run
 1. Copy and place the "_maze_robot_package_" folder at: _'/home/'$USER'/catkin_ws/src'_
