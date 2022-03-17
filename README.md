@@ -1,4 +1,8 @@
-# Group_18_finalProject_InteRobotic - University of Birmingham
+# Intelligent Robotics Project - Applying MDP to Maze Navigator Robot
+**School of Computer Science - University of Birmingham 2021-2022**
+
+**Authors: Haider Abbasi, Georgios Karanasios and Huw Ranscombe-Smith**
+
 This is our final project for the Intelligent Robotic module. The aim of the project was to apply the MDP technique called "policy iteration" in order for the robot to find the shortest path in the maze and reach the terminal state.
 
 ## How to run
@@ -22,3 +26,6 @@ This is our final project for the Intelligent Robotic module. The aim of the pro
 ## Extra
 If you face any issues, try to rebuild the package from scratch, please use the following link as a guide: 
 https://duckietown.mit.edu/media/pdfs/1rpRisFoCYUm0XT78j-nAYidlh-cDtLCdEbIaBCnx9ew.pdf
+
+## Demo video link
+https://youtu.be/C4jgvjY9v10
